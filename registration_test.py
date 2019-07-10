@@ -1,26 +1,17 @@
 from selenium import webdriver
-import time
 
-link = 'http://suninjuly.github.io/registration2.html'
-browser = webdriver.Chrome()
-browser.get(link)
+def register(url):
 
-inp = 'input[required]'
+    browser = webdriver.Chrome()
+    browser.get(url)
 
-name = browser.find_element_by_css_selector(inp + '.first')
-name.send_keys('Petr')
+    num, data = ['first', 'second', 'third'], ['Petr', 'Petrov', 'petrov@mail.com']
+    for n, d in zip(num, data):
+        browser.find_element_by_css_selector(f'input[required].{n}').send_keys(f'{d}')
 
-surname = browser.find_element_by_css_selector(inp + '.second')
-surname.send_keys('Petrov')
+    browser.find_element_by_tag_name('button').click()
+    welcome_text = browser.find_element_by_tag_name("h1").text
 
-email = browser.find_element_by_css_selector(inp + '.third')
-email.send_keys('petrov@mail.com')
+    browser.quit()
 
-button = browser.find_element_by_css_selector("button.btn")
-button.click()
-time.sleep(1)
-
-welcome_text_elt = browser.find_element_by_tag_name("h1")
-welcome_text = welcome_text_elt.text
-
-assert "Поздравляем! Вы успешно зарегистировались!" == welcome_text
+    return welcome_text
